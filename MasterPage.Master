@@ -1,0 +1,382 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="erpSoftTickets.Secured.MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CampusERP-Soft Tickets</title>
+    <%--<link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon.ico" />--%>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 is core css-->
+    <link href="/Secured/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome is for fa fa icons-->
+    <link href="bootstrap/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Theme style is core css-->
+    <link href="/Secured/bootstrap/css/AdminLTE.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+    <link href="/Secured/bootstrap/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <!-- This is for animation-->
+    <%--<link href="/assets/animate-css/animate.min.css" rel="stylesheet" />--%>
+
+    <style type="text/css">
+        .form-control {
+            font-weight: bold !important;
+        }
+        /*style for Scroll*/
+        .tbl::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 7px;
+            background-color: #F5F5F5;
+        }
+
+        .tbl::-webkit-scrollbar {
+            width: 7px;
+            background-color: #F5F5F5;
+        }
+
+        .tbl::-webkit-scrollbar-thumb {
+            border-radius: 7px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #2196F3;
+        }
+
+        .content-wrapper {
+            min-height: calc(100vh - 101px);
+            background-image: url('/Secured/images/Maroon1.jpg');
+            background-size: cover;
+            z-index: 800;
+        }
+
+        .content-header {
+            color: yellow;
+        }
+        /*style for Progressbar modal popup*/
+        .modalShow {
+            top: 0;
+            left: 0;
+            z-index: 99;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+            -moz-opacity: 0.8;
+            /*min-height: 100%;*/
+            width: 100%;
+        }
+
+        .loading {
+            font-family: Arial;
+            font-size: 10pt;
+            border: 5px solid #67CFF5;
+            width: 200px;
+            height: 100px;
+            display: none;
+            position: fixed;
+            background-color: White;
+            z-index: 99;
+        }
+        /*ALERT MESSAGES CSS--%>*/
+        .messagealert {
+            position: fixed;
+            top: 23px;
+            z-index: 100000;
+            padding: 0;
+            font-size: 15px;
+        }
+
+        .table-blue-border {
+            border: 1.5px solid #609FCA;
+        }
+
+        .skin-blue-light .main-header .navbar {
+            /*background-color: #3c8dbc;
+            border-bottom: 1px solid #f3d712 !important;*/
+            background: linear-gradient(to right, #962827, #cc4a49, #942e2d) !important;
+        }
+
+        .skin-blue-light .main-footer {
+            border-top: 1px solid #f3d712 !important;
+        }
+
+        .dropdown-menu > li > a {
+            color: #000 !important;
+        }
+
+        .main-footer {
+            background: linear-gradient(to right, #962827, #cc4a49, #942e2d) !important;
+            /*background: #3c8dbc;*/
+            padding: 8px;
+            color: #fff !important;
+            border-top: 1px solid #d2d6de;
+        }
+
+        .text-white {
+            color: white !important;
+        }
+
+        .pd-5 {
+            padding: 5px;
+        }
+
+        .btn {
+            border-color: #cff1e1 !important;
+        }
+
+        .btn-success {
+            background-color: #49d204 !important;
+            border-color: #cff1e1 !important;
+        }
+
+        bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
+            background-color: #49d204 !important;
+        }
+
+        .messagealert {
+            margin-left: 15px !important;
+            margin-right: 15px !important;
+        }
+    </style>
+
+    <!-- jQuery 3 is core js -->
+    <script src="/Secured/plugins/Calender/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 is core js -->
+    <script src="/Secured/bootstrap/js/bootstrap.min.js"></script>
+    <!-- AdminLTE App is core js-->
+    <script src="/Secured/bootstrap/js/adminlte.min.js"></script>
+    <!-- Custom js for Validations-->
+    <script src="/Secured/bootstrap/js/validate.js"></script>
+
+    <%--ALERT MESSAGES SCRIPT--%>
+    <script type="text/javascript">
+        function ShowMessage(message, messagetype) {
+            try {
+                var cssclass;
+                switch (messagetype) {
+                    case 'Success':
+                        cssclass = 'alert-success'
+                        break;
+                    case 'Error':
+                        cssclass = 'alert-danger'
+                        break;
+                    case 'Warning':
+                        cssclass = 'alert-warning'
+                        break;
+                    default:
+                        cssclass = 'alert-info'
+                }
+                $("#alert_div").remove();
+                $('#alert_container').append('<div id="alert_div" style="margin: 30px -11px -36px; -1.3%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
+
+                setTimeNotout(cssclass);
+            }
+            catch (ex) { }
+        }
+
+        function setTimeNotout(cssclass) {
+            try {
+                if (cssclass == 'alert-danger' || cssclass == 'alert-warning') {
+                    $("#alert_div").fadeTo(2000, 500);
+                }
+                else {
+                    $("#alert_div").fadeTo("fast", 5000).slideUp(1000, function () {
+                        $("#alert_div").remove();
+                    });
+                }
+            }
+            catch (ex) { }
+        }
+        function openChangeFinYear() {
+            $('#myModalFinYear').modal('show');
+        }
+
+    </script>
+
+    <asp:ContentPlaceHolder ID="ContentPlaceHolderHead" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="tbl hold-transition skin-blue-light layout-top-nav ">
+    <form id="form1" runat="server" autocomplete="false">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        <%-- Loader --%>
+        <div class="loading" align="center">
+            Processing.. Please wait.<br />
+            <img src="/Secured/images/loader.gif" alt="" />
+        </div>
+        <%-- end --%>
+        <div class="wrapper">
+            <header class="main-header">
+                <nav class="navbar navbar-fixed-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="../../Default.aspx" class="navbar-brand" style="margin-top: -12px">
+                                <img src="/Secured/images/LogoERP.jpg" class="pd-5" height="45" width="120" /></a>
+
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </div>
+
+                        <div class="collapse navbar-collapse pull-left tbl" id="navbar-collapse">
+
+                            <ul class="nav navbar-nav">
+                                <%-- <li class="active"><a href="Dashboard.aspx">Dashboard <span class="sr-only"></span></a></li>--%>
+                                <li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'>File <span class='caret'></span></a>
+                                    <ul class='dropdown-menu' role='menu'>
+                                        <li>
+                                            <a class='dropdown' href='/Secured/SoftTicket.aspx'>Software Tickets</a>
+
+                                        </li>
+                                    </ul>
+                                </li>
+                             
+                                <li>
+                                      <a class='dropdown' href='/Secured/StudentRegister.aspx'>Student Register</a>
+                                </li>
+                                <li><a href='#' class='dropdown-toggle' data-toggle='dropdown'>Reports <span class='caret'></span></a>
+                                    <ul class='dropdown-menu' role='menu'>
+                                        <li><a class='dropdown' href='/Secured/menuReports/PayoutReport.aspx'>Payout Report</a></li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <asp:LinkButton runat="server" ID="lnkbtnLogout" OnClick="lnkbtnLogout_Click" Text="Logout">Logout</asp:LinkButton></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <asp:HiddenField runat="server" ID="hdMasterProductCode" ClientIDMode="Static" />
+            <div class="content-wrapper">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolderBody" runat="server">
+                </asp:ContentPlaceHolder>
+                <asp:ContentPlaceHolder ID="ContentPlaceHolderScripts" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+            <!-- /.content-wrapper -->
+        </div>
+        <!-- ./wrapper -->
+        <footer class="main-footer">
+            <strong>User : </strong><% =Session["UserName"] %>  
+            <asp:LinkButton runat="server" ID="lnkbtnChangeFinYear" 
+                Text="Financial Year" class="pull-right text-white">
+                <b>Fin Year : </b><% =Session["FinYear"] %></asp:LinkButton>
+        </footer>
+        <!-- MESSAGE BOX-->
+    </form>
+
+    <%-- This Confirm Logout--%>
+    <script type="text/javascript">
+        function DisableClick() {
+            $('body').css('pointer-events', 'none'); //De-activate all pointer-events on body
+        }
+        function EnableClick() {
+            $('body').css('pointer-events', 'all'); //activate all pointer-events on body
+        }
+        function ShowProgress() {
+            //  alert("ShowProgress");
+            setTimeout(function () {
+                DisableClick();
+                var modal = $('<div />');
+                modal.addClass("modalShow");
+                $('body').append(modal);
+                var loading = $(".loading");
+                loading.show();
+                var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+                var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+                loading.css({ top: top, left: left });
+            }, 200);
+        }
+
+        function HideProgress() {
+            setTimeout(function () {
+                EnableClick();
+                var modal = $('<div />');
+                modal.addClass("modalShow");
+                $('body').append(modal);
+                var loading = $(".loading");
+                loading.hide();
+                var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+                var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+                loading.css({ top: top, left: left });
+            }, 200);
+        }
+
+        function pageLoad(sender, args) {
+            Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(beginRequest);
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequest);
+        }
+
+        function beginRequest(sender, args) {
+            ShowProgress();
+        }
+
+        function endRequest(sender, args) {
+            HideProgress();
+        }
+
+    </script>
+    <%-- end --%>
+
+    <%-- script for disable button when processing --%>
+    <script type="text/javascript">
+        //-------*************************************************************************************************--------
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        //Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
+        prm.add_beginRequest(BeginRequestHandler);
+        // Raised after an asynchronous postback is finished and control has been returned to the browser.
+        prm.add_endRequest(EndRequestHandler);
+        function BeginRequestHandler(sender, args) {
+            DisableButtons()
+        }
+        function EnableButtons() {
+            var inputs = document.getElementsByClassName("btn")
+            for (var i in inputs) {
+                if (inputs[i].type == "button" || inputs[i].type == "submit") {
+                    inputs[i].disabled = false;
+                }
+            }
+        }
+        //script to disable buttons
+        function DisableButtons() {
+            var inputs = document.getElementsByClassName("btn")
+            for (var i in inputs) {
+                if (inputs[i].type == "button" || inputs[i].type == "submit") {
+                    inputs[i].disabled = true;
+                }
+            }
+        }
+        function EndRequestHandler(sender, args) {
+            //Hide the modal popup - the update progress
+            EnableButtons();
+
+        }
+        window.onbeforeunload = DisableButtons;
+    </script>
+
+    <%--  This Red Border on Validation --%>
+    <script>
+        function ValidatorUpdateDisplay(val) {
+            if (typeof (val.display) == "string") {
+                if (val.display == "None") {
+                    return;
+                }
+                if (val.display == "Dynamic") {
+                    val.style.display = val.isvalid ? "none" : "inline";
+                    if (val.className == 'red-border' && val.controltovalidate) {
+                        if (val.isvalid) {
+                            document.getElementById(val.controltovalidate).style.border = '1px solid #9eaaad';
+                        }
+                        else {
+                            document.getElementById(val.controltovalidate).style.border = '1px solid red';
+                        }
+                    }
+                    return;
+                }
+            }
+            val.style.visibility = val.isvalid ? "hidden" : "visible";
+        }
+    </script>
+</body>
+</html>
